@@ -42,3 +42,7 @@ def search(request):
         'recommendations': recommendations,
         'input_entry': input_entry
     })
+
+
+def new_entry(request):
+    return render(request, "encyclopedia/new_entry_creation.html")
