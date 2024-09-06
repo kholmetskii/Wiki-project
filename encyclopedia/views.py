@@ -30,3 +30,15 @@ def entry(request, title):
             "title": title,
             "content": html_content
         })
+
+
+def search(request):
+    input_entry = request.POST['q']
+    recommendations = []
+    for entry in util.list_entries():
+        if input_entry.lower() in entry.lower():
+            recommendations.append(entry)
+    return render(request, 'encyclopedia/recommendations.html', {
+        'recommendations': recommendations,
+        'input_entry': input_entry
+    })
