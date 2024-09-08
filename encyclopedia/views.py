@@ -22,8 +22,8 @@ def convert_md_to_html(title):
 def entry(request, title):
     html_content = convert_md_to_html(title)
     if html_content is None:
-        return render(request, "encyclopedia/not_found.html", {
-            "title": title
+        return render(request, "encyclopedia/error.html", {
+            "message": f"Entry '{title}' was not found"
         })
     else:
         return render(request, "encyclopedia/entry.html", {
@@ -33,16 +33,37 @@ def entry(request, title):
 
 
 def search(request):
-    input_entry = request.POST['q']
-    recommendations = []
-    for entry in util.list_entries():
-        if input_entry.lower() in entry.lower():
-            recommendations.append(entry)
-    return render(request, 'encyclopedia/recommendations.html', {
-        'recommendations': recommendations,
-        'input_entry': input_entry
-    })
+    if request.method == 'POST':
+        input_entry = request.POST['q']
+        recommendations = []
+        for entry in util.list_entries():
+            if input_entry.lower() in entry.lower():
+                recommendations.append(entry)
+        return render(request, 'encyclopedia/recommendations.html', {
+            'recommendations': recommendations,
+            'input_entry': input_entry
+        })
 
 
 def new_entry(request):
-    return render(request, "encyclopedia/new_entry_creation.html")
+    if request.method == 'GET':
+        return render(request, "encyclopedia/new_entry_creation.html")
+    else:
+        new_title = request.POST['title']
+        new_content = request.POST['content']
+        title_flag = util.get_entry(new_title)
+        if title_flag:
+            return render(request, "encyclopedia/error.html", {
+                "message": f"This entry '{new_title}' is already exist"
+            })
+        else:
+            util.save_entry(new_title, new_content)
+            html_content = convert_md_to_html(new_title)
+            return render(request, "encyclopedia/entry.html", {
+                "title": new_title,
+                "content": html_content
+            })
+
+def edit(request):
+    return
+
