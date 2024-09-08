@@ -1,10 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "encyclopedia/layout.html" %}
 
-</body>
-</html>
+{% block title %}
+    Encyclopedia
+{% endblock %}
+
+{% block body %}
+    <h1>Edit entry</h1>
+    <form action="{% url 'save_edit' %}" method="POST">
+        {% csrf_token %}
+        <label>Title:</label>
+        <br/>
+        <input type="text" name="title" placeholder="Enter the title" value="{{ title }}">
+        <br/>
+        <label>Content:</label>
+        <br/>
+        <textarea name="content" placeholder="Enter the content">{{ content }}</textarea>
+        <br/>
+        <input type="submit" value="Edit">
+    </form>
+
+{% endblock %}
