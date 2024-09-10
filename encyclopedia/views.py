@@ -1,3 +1,4 @@
+import random
 import markdown
 from django.shortcuts import render
 
@@ -5,8 +6,9 @@ from . import util
 
 
 def index(request):
+    entries = util.list_entries()
     return render(request, "encyclopedia/index.html", {
-        "entries": util.list_entries()
+        "entries": entries
     })
 
 
@@ -67,7 +69,7 @@ def new_entry(request):
 
 def edit(request):
     if request.method == "POST":
-        title = request.POST['entry_title']
+        title = request.POST['current_title']
         content = util.get_entry(title)
         return render(request, "encyclopedia/edit.html", {
             "title": title,
@@ -85,3 +87,14 @@ def save_edit(request):
             "title": title,
             "content": html_content
         })
+
+
+def random_page(request):
+    entries = util.list_entries()
+    random_entry_title = random.choice(entries)
+    random_entry_html_content = convert_md_to_html(random_entry_title)
+    return render(request, "encyclopedia/entry.html", {
+        "title": random_entry_title,
+        "content": random_entry_html_content
+    })
+

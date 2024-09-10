@@ -8,9 +8,8 @@
     <h1>Edit entry</h1>
     <form action="{% url 'save_edit' %}" method="POST">
         {% csrf_token %}
-        <label>Title:</label>
         <br/>
-        <input type="text" name="title" placeholder="Enter the title" value="{{ title }}">
+        <input type="hidden" name="title" placeholder="Enter the title" value="{{ title }}">
         <br/>
         <label>Content:</label>
         <br/>
